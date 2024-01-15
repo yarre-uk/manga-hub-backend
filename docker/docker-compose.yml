@@ -1,7 +1,15 @@
 version: '3.5'
 
 services:
-  postgres:
+  server:
+    build:
+      context: .
+    environment:
+      NODE_ENV: production
+    ports:
+      - 3000:3000
+
+  db:
     container_name: postgres_container
     build: postgres
     environment:
@@ -17,7 +25,7 @@ services:
       - postgres
     restart: unless-stopped
 
-  pgadmin:
+  pgAdmin:
     container_name: pgadmin_container
     build: ./pgadmin
     environment:
