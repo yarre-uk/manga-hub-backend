@@ -1,7 +1,16 @@
 version: '3.5'
 
 services:
-  
+  nest:
+    container_name: nest_container
+    build: .
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgres://postgres:root@db:5432/postgres_db}
+      JWT_SECRET: ${JWT_SECRET:-secret}
+      JWT_EXPIRATION_IN: ${JWT_EXPIRATION_IN:-1h}
+    ports:
+      - 3000:3000
+
   db:
     container_name: postgres_container
     build: ./postgres
@@ -20,30 +29,21 @@ services:
       - postgres
     restart: unless-stopped
 
-  pg_admin:
-    container_name: pgadmin_container
-    build: ./pgadmin
-    env_file:
-      - .env
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-root}
-    volumes:
-      - pgadmin:/root/.pgadmin
-    ports:
-      - "${PGADMIN_PORT:-5050}:80"
-    networks:
-      - postgres
-    restart: unless-stopped
-
-  server:
-    build: ../
-    environment:
-      DATABASE_URL: "postgresql://postgres:root@localhost:5430/db_test_auth"
-      JWT_SECRET: akjDd01L93jsfakcv
-      JWT_EXPIRATION_IN: 2h
-    ports:
-      - 3000:3000
+  # pg_admin:
+  #   container_name: pgadmin_container
+  #   build: ./pgadmin
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
+  #     PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-root}
+  #   volumes:
+  #     - pgadmin:/root/.pgadmin
+  #   ports:
+  #     - "${PGADMIN_PORT:-5050}:80"
+  #   networks:
+  #     - postgres
+  #   restart: unless-stopped
 
 
 networks:
