@@ -1,17 +1,12 @@
 version: '3.5'
 
 services:
-  server:
-    build:
-      context: .
-    environment:
-      NODE_ENV: production
-    ports:
-      - 3000:3000
-
+  
   db:
     container_name: postgres_container
-    build: postgres
+    build: ./postgres
+    env_file:
+      - .env
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root}
@@ -25,9 +20,11 @@ services:
       - postgres
     restart: unless-stopped
 
-  pgAdmin:
+  pg_admin:
     container_name: pgadmin_container
     build: ./pgadmin
+    env_file:
+      - .env
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-root}
@@ -38,6 +35,16 @@ services:
     networks:
       - postgres
     restart: unless-stopped
+
+  server:
+    build: ../
+    environment:
+      DATABASE_URL: "postgresql://postgres:root@localhost:5430/db_test_auth"
+      JWT_SECRET: akjDd01L93jsfakcv
+      JWT_EXPIRATION_IN: 2h
+    ports:
+      - 3000:3000
+
 
 networks:
   postgres:
