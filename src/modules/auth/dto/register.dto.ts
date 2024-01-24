@@ -6,7 +6,7 @@ import {
   Validate,
 } from 'class-validator';
 
-import { IsPasswordsMatchingConstraint } from '@common/decorators';
+import { IsPasswordsMatchingConstraint } from '@/decorators';
 
 export class RegisterDto {
   @IsEmail()

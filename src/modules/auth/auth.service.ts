@@ -12,11 +12,10 @@ import { compareSync } from 'bcrypt';
 import { add } from 'date-fns';
 import { v4 } from 'uuid';
 
-import { PrismaService } from '@prisma/prisma.service';
-import { UserService } from '@user/user.service';
-
 import { LoginDto, RegisterDto } from './dto';
 import { Tokens } from './interfaces';
+import { PrismaService } from '../prisma/prisma.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {

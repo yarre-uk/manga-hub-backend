@@ -19,14 +19,14 @@ import { Provider } from '@prisma/client';
 import { Request, Response } from 'express';
 import { map, mergeMap } from 'rxjs';
 
-import { Cookie, Public, UserAgent } from '@common/decorators';
-import { handleTimeoutAndErrors } from '@common/helpers';
-import { UserResponse } from '@user/responses';
+import { Cookie, Public, UserAgent } from '@/decorators';
+import { handleTimeoutAndErrors } from '@/helpers';
 
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './dto';
 import { GoogleGuard } from './guards/google.guard';
 import { Tokens } from './interfaces';
+import { UserResponse } from '../user/responses';
 
 const REFRESH_TOKEN = 'refreshToken';
 

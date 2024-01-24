@@ -10,12 +10,12 @@ import {
 } from '@nestjs/common';
 import { Role } from '@prisma/client';
 
-import { RolesGuard } from '@auth/guards/role.guard';
-import { JwtPayload } from '@auth/interfaces';
-import { CurrentUser, Roles } from '@common/decorators';
+import { CurrentUser, Roles } from '@/decorators';
 
 import { UserResponse } from './responses';
 import { UserService } from './user.service';
+import { RolesGuard } from '../auth/guards/role.guard';
+import { JwtPayload } from '../auth/interfaces';
 
 @Controller('user')
 export class UserController {
@@ -36,7 +36,10 @@ export class UserController {
   }
 
   @Delete(':id')
-  async deleteUser(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: JwtPayload) {
+  async deleteUser(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: JwtPayload,
+  ) {
     return this.userService.delete(id, user);
   }
 }

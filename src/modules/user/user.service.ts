@@ -5,9 +5,10 @@ import { Role, User } from '@prisma/client';
 import { genSaltSync, hashSync } from 'bcrypt';
 import { Cache } from 'cache-manager';
 
-import { JwtPayload } from '@auth/interfaces';
-import { convertToSecondsUtil } from '@common/utils';
-import { PrismaService } from '@prisma/prisma.service';
+import { convertToSecondsUtil } from '@/utils';
+
+import { JwtPayload } from '../auth/interfaces';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class UserService {
