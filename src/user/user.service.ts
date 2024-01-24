@@ -18,7 +18,9 @@ export class UserService {
   ) {}
 
   async save(user: Partial<User>) {
-    const hashedPassword = user?.password ? this.hashPassword(user.password) : null;
+    const hashedPassword = user?.password
+      ? this.hashPassword(user.password)
+      : null;
 
     const savedUser = await this.prismaService.user.upsert({
       where: {
@@ -60,7 +62,11 @@ export class UserService {
 
     if (!user) return null;
 
-    await this.cacheManager.set(idOrEmail, user, convertToSecondsUtil(this.configService.get('JWT_EXPIRATION_IN')));
+    await this.cacheManager.set(
+      idOrEmail,
+      user,
+      convertToSecondsUtil(this.configService.get('JWT_EXPIRATION_IN')),
+    );
 
     return user;
   }
@@ -70,9 +76,15 @@ export class UserService {
       throw new ForbiddenException();
     }
 
-    await Promise.all([await this.cacheManager.del(id), await this.cacheManager.del(user.email)]);
+    await Promise.all([
+      await this.cacheManager.del(id),
+      await this.cacheManager.del(user.email),
+    ]);
 
-    return this.prismaService.user.delete({ where: { id }, select: { id: true } });
+    return this.prismaService.user.delete({
+      where: { id },
+      select: { id: true },
+    });
   }
 
   private hashPassword(password: string) {

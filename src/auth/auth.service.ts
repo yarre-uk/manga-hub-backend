@@ -28,10 +28,12 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterDto) {
-    const user: User = await this.userService.findOne(dto.email).catch((err) => {
-      this.logger.error(err);
-      return null;
-    });
+    const user: User = await this.userService
+      .findOne(dto.email)
+      .catch((err) => {
+        this.logger.error(err);
+        return null;
+      });
 
     if (user) {
       throw new ConflictException(`User ${user.email} already registered`);
@@ -44,13 +46,17 @@ export class AuthService {
   }
 
   async login(dto: LoginDto, agent: string): Promise<Tokens> {
-    const user: User = await this.userService.findOne(dto.email, true).catch((err) => {
-      this.logger.error(err);
-      return null;
-    });
+    const user: User = await this.userService
+      .findOne(dto.email, true)
+      .catch((err) => {
+        this.logger.error(err);
+        return null;
+      });
 
     if (user && !user.password) {
-      throw new UnauthorizedException('Account was registered with auth provider');
+      throw new UnauthorizedException(
+        'Account was registered with auth provider',
+      );
     }
 
     if (!user || !compareSync(dto.password, user.password)) {
@@ -61,7 +67,9 @@ export class AuthService {
   }
 
   async refreshTokens(refreshToken: string, agent: string): Promise<Tokens> {
-    const token = await this.prismaService.token.delete({ where: { token: refreshToken } });
+    const token = await this.prismaService.token.delete({
+      where: { token: refreshToken },
+    });
     if (!token || new Date(token.exp) < new Date()) {
       throw new UnauthorizedException();
     }
@@ -77,17 +85,21 @@ export class AuthService {
     const userExists = await this.userService.findOne(email);
 
     if (userExists) {
-      const user = await this.userService.save({ email, provider }).catch((err) => {
-        this.logger.error(err);
-        return null;
-      });
+      const user = await this.userService
+        .save({ email, provider })
+        .catch((err) => {
+          this.logger.error(err);
+          return null;
+        });
       return this.generateTokens(user, agent);
     }
 
-    const user = await this.userService.save({ email, provider }).catch((err) => {
-      this.logger.error(err);
-      return null;
-    });
+    const user = await this.userService
+      .save({ email, provider })
+      .catch((err) => {
+        this.logger.error(err);
+        return null;
+      });
 
     if (!user) {
       throw new HttpException(

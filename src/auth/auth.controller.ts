@@ -45,25 +45,38 @@ export class AuthController {
     const user = await this.authService.register(dto);
 
     if (!user) {
-      throw new BadRequestException(`Something went wrong when trying to register user: ${JSON.stringify(dto)}`);
+      throw new BadRequestException(
+        `Something went wrong when trying to register user: ${JSON.stringify(
+          dto,
+        )}`,
+      );
     }
 
     return new UserResponse(user);
   }
 
   @Post('login')
-  async login(@Body() dto: LoginDto, @Res() res: Response, @UserAgent() agent: string) {
+  async login(
+    @Body() dto: LoginDto,
+    @Res() res: Response,
+    @UserAgent() agent: string,
+  ) {
     const tokens = await this.authService.login(dto, agent);
 
     if (!tokens) {
-      throw new BadRequestException(`Unable to login with: ${JSON.stringify(dto)}`);
+      throw new BadRequestException(
+        `Unable to login with: ${JSON.stringify(dto)}`,
+      );
     }
 
     this.setRefreshTokenToCookies(tokens, res);
   }
 
   @Get('logout')
-  async logout(@Cookie(REFRESH_TOKEN) refreshToken: string, @Res() res: Response) {
+  async logout(
+    @Cookie(REFRESH_TOKEN) refreshToken: string,
+    @Res() res: Response,
+  ) {
     if (!refreshToken) {
       res.sendStatus(HttpStatus.OK);
     }
@@ -71,14 +84,19 @@ export class AuthController {
     await this.authService.deleteRefreshToken(refreshToken);
     res.cookie(REFRESH_TOKEN, '', {
       httpOnly: true,
-      secure: this.configService.get('NODE_ENV', 'development') === 'production',
+      secure:
+        this.configService.get('NODE_ENV', 'development') === 'production',
       expires: new Date(),
     });
     res.sendStatus(HttpStatus.OK);
   }
 
   @Get('refresh-tokens')
-  async refreshTokens(@Cookie(REFRESH_TOKEN) refreshToken: string, @Res() res: Response, @UserAgent() agent: string) {
+  async refreshTokens(
+    @Cookie(REFRESH_TOKEN) refreshToken: string,
+    @Res() res: Response,
+    @UserAgent() agent: string,
+  ) {
     if (!refreshToken) {
       throw new UnauthorizedException();
     }
@@ -100,16 +118,28 @@ export class AuthController {
   @Get('google/callback')
   googleAuthCallback(@Req() req: Request, @Res() res: Response) {
     const token = req.user['accessToken'];
-    return res.redirect(`http://localhost:3000/api/auth/success-google?token=${token}`);
+    return res.redirect(
+      `http://localhost:3000/api/auth/success-google?token=${token}`,
+    );
   }
 
   @Get('success-google')
-  successGoogle(@Query('token') token: string, @UserAgent() agent: string, @Res() res: Response) {
-    return this.httpService.get(`https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${token}`).pipe(
-      mergeMap(({ data: { email } }) => this.authService.providerAuth(email, agent, Provider.GOOGLE)),
-      map((data) => this.setRefreshTokenToCookies(data, res)),
-      handleTimeoutAndErrors(),
-    );
+  successGoogle(
+    @Query('token') token: string,
+    @UserAgent() agent: string,
+    @Res() res: Response,
+  ) {
+    return this.httpService
+      .get(
+        `https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${token}`,
+      )
+      .pipe(
+        mergeMap(({ data: { email } }) =>
+          this.authService.providerAuth(email, agent, Provider.GOOGLE),
+        ),
+        map((data) => this.setRefreshTokenToCookies(data, res)),
+        handleTimeoutAndErrors(),
+      );
   }
 
   private setRefreshTokenToCookies(tokens: Tokens, res: Response) {
@@ -121,7 +151,8 @@ export class AuthController {
       httpOnly: true,
       sameSite: 'lax',
       expires: new Date(tokens.refreshToken.exp),
-      secure: this.configService.get('NODE_ENV', 'development') === 'production',
+      secure:
+        this.configService.get('NODE_ENV', 'development') === 'production',
       path: '/',
     });
 
