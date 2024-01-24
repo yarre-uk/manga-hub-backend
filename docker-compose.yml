@@ -10,7 +10,12 @@ services:
       JWT_EXPIRATION_IN: ${JWT_EXPIRATION_IN:-1h}
     ports:
       - 3000:3000
-
+    volumes:
+      - ./src:/app/src
+    depends_on:
+      db:
+        condition: service_healthy
+    
   db:
     container_name: postgres_container
     build: ./postgres
@@ -28,22 +33,27 @@ services:
     networks:
       - postgres
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "${POSTGRES_DB:-postgres_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # pg_admin:
-  #   container_name: pgadmin_container
-  #   build: ./pgadmin
-  #   env_file:
-  #     - .env
-  #   environment:
-  #     PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
-  #     PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-root}
-  #   volumes:
-  #     - pgadmin:/root/.pgadmin
-  #   ports:
-  #     - "${PGADMIN_PORT:-5050}:80"
-  #   networks:
-  #     - postgres
-  #   restart: unless-stopped
+  pg_admin:
+    container_name: pgadmin_container
+    build: ./pgadmin
+    env_file:
+      - .env
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-root}
+    volumes:
+      - pgadmin:/root/.pgadmin
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    networks:
+      - postgres
+    restart: unless-stopped
 
 
 networks:
