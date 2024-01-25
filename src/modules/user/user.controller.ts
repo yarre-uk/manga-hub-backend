@@ -12,7 +12,7 @@ import { Role } from '@prisma/client';
 
 import { CurrentUser, Roles } from '@/decorators';
 
-import { UserResponse } from './responses';
+import { UserResponse } from './user.response';
 import { UserService } from './user.service';
 import { RolesGuard } from '../auth/guards/role.guard';
 import { JwtPayload } from '../auth/interfaces';

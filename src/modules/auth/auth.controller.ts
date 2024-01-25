@@ -26,7 +26,7 @@ import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './dto';
 import { GoogleGuard } from './guards/google.guard';
 import { Tokens } from './interfaces';
-import { UserResponse } from '../user/responses';
+import { UserResponse } from '../user/user.response';
 
 const REFRESH_TOKEN = 'refreshToken';
 

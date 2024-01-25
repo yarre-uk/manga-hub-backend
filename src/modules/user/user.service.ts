@@ -19,9 +19,7 @@ export class UserService {
   ) {}
 
   async save(user: Partial<User>) {
-    const hashedPassword = user?.password
-      ? this.hashPassword(user.password)
-      : null;
+    const hashedPassword = this.hashPassword(user?.password);
 
     const savedUser = await this.prismaService.user.upsert({
       where: {
@@ -53,7 +51,9 @@ export class UserService {
 
     const cachedUser = await this.cacheManager.get<User>(idOrEmail);
 
-    if (cachedUser) return cachedUser;
+    if (cachedUser) {
+      return cachedUser;
+    }
 
     const user = await this.prismaService.user.findFirst({
       where: {
@@ -61,7 +61,9 @@ export class UserService {
       },
     });
 
-    if (!user) return null;
+    if (!user) {
+      return null;
+    }
 
     await this.cacheManager.set(
       idOrEmail,
@@ -88,7 +90,11 @@ export class UserService {
     });
   }
 
-  private hashPassword(password: string) {
+  private hashPassword(password: string | undefined): string | null {
+    if (!password) {
+      return null;
+    }
+
     return hashSync(password, genSaltSync(12));
   }
 }
