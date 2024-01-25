@@ -7,6 +7,6 @@ export class AppController {
   @Public()
   @Get('test')
   test() {
-    return 'works!';
+    return 'works!!';
   }
 }
