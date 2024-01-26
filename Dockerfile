@@ -1,4 +1,3 @@
-
 FROM node:21.6.0
 
 WORKDIR /app
@@ -17,4 +16,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["yarn", "dev"]
+CMD ["sh", "./startup.sh"]
