@@ -1,6 +1,7 @@
 FROM postgres:16
 
-RUN apt-get clean && apt-get update && \
-    apt-get install -y postgresql-contrib
+RUN apt-get clean
+RUN apt-get update
+RUN apt-get install -y postgresql-contrib
 
 ADD *.sql /docker-entrypoint-initdb.d/

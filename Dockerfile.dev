@@ -16,4 +16,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["sh", "./startup.sh"]
+CMD ["yarn", "dev"]

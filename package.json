@@ -16,9 +16,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "docker:up": "docker compose up --build -d",
-    "docker:down": "docker compose down",
-    "docker:migrate": "docker compose -f docker-compose.migrate.yml up -d --build"
+    "docker:up": "docker compose -f docker-compose.dev.yml up --build -d",
+    "docker:down": "docker compose -f docker-compose.dev.yml down --remove-orphans",
+    "docker:migrate:up": "docker compose -f docker-compose.migrate.yml up -d --build",
+    "docker:migrate:down": "docker compose -f docker-compose.migrate.yml down --remove-orphans"
   },
   "dependencies": {
     "@nestjs/axios": "^3.0.1",

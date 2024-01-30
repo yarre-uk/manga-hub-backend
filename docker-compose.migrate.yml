@@ -5,7 +5,7 @@ services:
     container_name: prisma_migrate
     build:
       context: .
-      dockerfile: migrate.Dockerfile
+      dockerfile: Dockerfile.migrate
     environment:
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
       - DB_HOST=${DB_HOST:-postgres_container}
@@ -15,7 +15,6 @@ services:
       - postgres
     depends_on:
       - db
-    restart: unless-stopped
 
   db:
     container_name: postgres_container
