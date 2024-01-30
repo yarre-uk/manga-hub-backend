@@ -1,0 +1,5 @@
+#!/bin/sh
+
+content=$(cat nest-cli.json)
+value=$(echo $content | jq -r '.sourceRoot')
+echo $value
