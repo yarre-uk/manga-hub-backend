@@ -1,21 +1,19 @@
-FROM node:21.6.0
+FROM node:21-alpine
 
 RUN echo $DATABASE_URL
 
 WORKDIR /app
 
-RUN apt update
-RUN apt --assume-yes install postgresql-client
-RUN apt --assume-yes install dos2unix
+RUN apk update
+RUN apk add postgresql-client
 
 COPY ./package.json ./
 COPY ./prisma ./prisma/
 
-RUN npm install
-RUN npx prisma generate
+RUN yarn install
+RUN yarn prisma generate
 
-COPY ./migrate.sh ./
-RUN chmod +x ./migrate.sh
-RUN dos2unix ./migrate.sh
+COPY ./bash/migrate-postgres.sh ./
+RUN chmod +x ./migrate-postgres.sh
 
-CMD ./migrate.sh $DB_HOST $POSTGRES_USER 
+CMD ./migrate-postgres.sh $DB_HOST $POSTGRES_USER 
