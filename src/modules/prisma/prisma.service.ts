@@ -7,9 +7,9 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     let counter = 0;
 
     while (true) {
-      await this.$connect();
       try {
         await this.$connect();
+        console.log('DB connected');
         break;
       } catch {
         await new Promise((r) => setTimeout(r, 2000));
