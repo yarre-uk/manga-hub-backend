@@ -15,6 +15,12 @@ migrateContainerExited () {
 }
 
 docker compose -f docker-compose.migrate.yml up -d --build
+
+if [ $? -eq 1 ]; then
+  echo "Error starting container, docker might not be running or the image might not be built. Exiting..."
+  exit 1
+fi
+
 echo "Waiting for container finishing..."
 migrateContainerExited
 until [ $? -eq 1 ]; do

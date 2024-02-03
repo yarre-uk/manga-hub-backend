@@ -5,26 +5,19 @@ services:
     container_name: prisma_migrate
     build:
       context: .
-      dockerfile: Dockerfile.migrate
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER:-postgres}
-      - DB_HOST=${DB_HOST:-postgres_container}
+      dockerfile: ./docker/node/Dockerfile.migrate
     env_file:
       - .env
-    networks:
-      - postgres
     depends_on:
       - db
 
   db:
     container_name: postgres_container
-    build: ./postgres
+    build: ./docker/postgres
     env_file:
       - .env
     volumes:
       - postgres:${PGDATA:-/data/postgres}
-    networks:
-      - postgres
     healthcheck:
       test:
         [
@@ -39,8 +32,3 @@ services:
 
 volumes:
   postgres:
-
-
-networks:
-  postgres:
-    driver: bridge
