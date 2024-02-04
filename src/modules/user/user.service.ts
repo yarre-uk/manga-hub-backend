@@ -95,6 +95,6 @@ export class UserService {
       return null;
     }
 
-    return hashSync(password, genSaltSync(12));
+    return hashSync(password, genSaltSync());
   }
 }

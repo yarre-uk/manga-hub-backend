@@ -11,6 +11,8 @@ import { JwtPayload } from '../auth/interfaces';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Auth(Role.ADMIN)
+  @Serialize()
   @Get('me')
   me(@CurrentUser() user: JwtPayload) {
     return user;

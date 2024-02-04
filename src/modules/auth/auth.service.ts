@@ -52,6 +52,7 @@ export class AuthService {
         return null;
       });
 
+    //TODO
     if (user && !user.password) {
       throw new UnauthorizedException(
         'Account was registered with auth provider',
