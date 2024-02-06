@@ -4,6 +4,7 @@ import { Exclude } from 'class-transformer';
 export class ProfileResponse implements User {
   id: string;
   email: string;
+  nickname: string;
 
   @Exclude()
   password: string;

@@ -11,11 +11,11 @@ import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
-    UserModule,
+    ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
+    UserModule,
     AuthModule,
     ProfileModule,
-    ConfigModule.forRoot({ isGlobal: true }),
   ],
   providers: [
     {
