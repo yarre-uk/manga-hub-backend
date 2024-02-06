@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { PrismaModule } from './modules/prisma/prisma.module';
+import { ProfileModule } from './modules/profile/profile.module';
 import { UserModule } from './modules/user/user.module';
 
 @Module({
@@ -13,6 +14,7 @@ import { UserModule } from './modules/user/user.module';
     UserModule,
     PrismaModule,
     AuthModule,
+    ProfileModule,
     ConfigModule.forRoot({ isGlobal: true }),
   ],
   providers: [

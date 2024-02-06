@@ -1,14 +1,20 @@
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Injectable, Inject } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Injectable } from '@nestjs/common';
 
-import { PrismaService } from '../prisma/prisma.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class ProfileService {
-  constructor(
-    private readonly prismaService: PrismaService,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(private readonly userService: UserService) {}
+
+  getProfile(profileId: string) {
+    return this.userService.findOne(profileId);
+  }
+
+  updateProfile(profileId: string) {
+    console.log('profileId', profileId);
+  }
+
+  deleteProfile(profileId: string) {
+    return this.userService.delete(profileId);
+  }
 }

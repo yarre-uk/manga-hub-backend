@@ -1,13 +1,11 @@
 import {
   ConflictException,
-  HttpException,
-  HttpStatus,
   Injectable,
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Provider, Token, User } from '@prisma/client';
+import { Token, User } from '@prisma/client';
 import { compareSync } from 'bcrypt';
 import { add } from 'date-fns';
 import { v4 } from 'uuid';
@@ -38,7 +36,7 @@ export class AuthService {
       throw new ConflictException(`User ${user.email} already registered`);
     }
 
-    return this.userService.save(dto).catch((err) => {
+    return this.userService.create(dto).catch((err) => {
       this.logger.error(err);
       return null;
     });
@@ -46,7 +44,7 @@ export class AuthService {
 
   async login(dto: LoginDto, agent: string): Promise<Tokens> {
     const user: User = await this.userService
-      .findOne(dto.email, true)
+      .findOne(dto.email)
       .catch((err) => {
         this.logger.error(err);
         return null;
@@ -81,35 +79,36 @@ export class AuthService {
     return this.prismaService.token.delete({ where: { token } });
   }
 
-  async providerAuth(email: string, agent: string, provider: Provider) {
-    const userExists = await this.userService.findOne(email);
+  //TODO
+  // async providerAuth(email: string, agent: string, provider: Provider) {
+  //   const userExists = await this.userService.findOne(email);
 
-    if (userExists) {
-      const user = await this.userService
-        .save({ email, provider })
-        .catch((err) => {
-          this.logger.error(err);
-          return null;
-        });
-      return this.generateTokens(user, agent);
-    }
+  //   if (userExists) {
+  //     const user = await this.userService
+  //       .update( ,{ email, provider })
+  //       .catch((err) => {
+  //         this.logger.error(err);
+  //         return null;
+  //       });
+  //     return this.generateTokens(user, agent);
+  //   }
 
-    const user = await this.userService
-      .save({ email, provider })
-      .catch((err) => {
-        this.logger.error(err);
-        return null;
-      });
+  //   const user = await this.userService
+  //     .save({ email, provider })
+  //     .catch((err) => {
+  //       this.logger.error(err);
+  //       return null;
+  //     });
 
-    if (!user) {
-      throw new HttpException(
-        `Unable to create user with email ${email} with ${provider} auth`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+  //   if (!user) {
+  //     throw new HttpException(
+  //       `Unable to create user with email ${email} with ${provider} auth`,
+  //       HttpStatus.BAD_REQUEST,
+  //     );
+  //   }
 
-    return this.generateTokens(user, agent);
-  }
+  //   return this.generateTokens(user, agent);
+  // }
 
   private async generateTokens(user: User, agent: string): Promise<Tokens> {
     const accessToken = this.jwtService.sign({
