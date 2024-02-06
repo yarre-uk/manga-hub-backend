@@ -7,11 +7,11 @@ WORKDIR /app
 RUN apk update && apk add postgresql-client
 
 COPY ./package.json ./
+COPY ./yarn.lock ./
+RUN yarn install 
+
 COPY ./prisma ./prisma/
+RUN yarn prisma generate
 
-RUN yarn install && yarn prisma generate
-
-COPY ./bash/migrate-postgres.sh ./
-RUN chmod +x ./migrate-postgres.sh
-
-CMD ./migrate-postgres.sh $DB_HOST $POSTGRES_USER 
+COPY ./bash ./
+RUN chmod +x *.sh

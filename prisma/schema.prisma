@@ -20,6 +20,7 @@ model User {
   roles     Role[]
   Token     Token[]
   nickname  String
+  aboba     String
 
   @@map("users")
 }

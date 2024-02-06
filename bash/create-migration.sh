@@ -11,4 +11,4 @@ done
 
 echo "Postgres is up - executing command"
 
-yarn prisma migrate deploy
+yarn prisma migrate dev --name $3
