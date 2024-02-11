@@ -10,7 +10,7 @@ services:
       - .env
     depends_on:
       - db
-    command: [ "./migrate.sh", "$DB_HOST", "$POSTGRES_USER" ]
+    command: [ "sh", "migrate.bash", "$DB_HOST", "$POSTGRES_USER" ]
 
   db:
     container_name: postgres_container
@@ -19,6 +19,8 @@ services:
       - .env
     volumes:
       - postgres:${PGDATA}
+    ports:
+      - "5432:5432"
     healthcheck:
       test:
         [

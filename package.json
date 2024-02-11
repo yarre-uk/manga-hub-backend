@@ -18,8 +18,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "docker:up": "docker compose -f docker-compose.dev.yml up --build -d",
     "docker:down": "docker compose -f docker-compose.dev.yml down --remove-orphans",
-    "docker:migrate": "./bash/migrate-prisma.sh",
-    "docker:add-migration": "./bash/create-migration-prisma.sh"
+    "docker:migrate": "./bash/migrate-prisma.bash",
+    "docker:add-migration": "./bash/create-migration-prisma.bash"
   },
   "dependencies": {
     "@nestjs/axios": "^3.0.1",

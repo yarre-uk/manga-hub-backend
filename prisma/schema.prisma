@@ -19,7 +19,7 @@ model User {
   updatedAt DateTime  @updatedAt @map("updated_at")
   roles     Role[]
   Token     Token[]
-  nickname  String
+  nickname  String    @unique
 
   @@map("users")
 }

@@ -14,4 +14,4 @@ COPY ./prisma ./prisma/
 RUN yarn prisma generate
 
 COPY ./bash ./
-RUN chmod +x *.sh
+RUN chmod +x *.bash

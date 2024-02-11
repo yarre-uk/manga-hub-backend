@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 migrateContainerExited () {
   RES=$(docker ps -a \
@@ -23,14 +23,13 @@ fi
 
 echo "Waiting for container finishing..."
 migrateContainerExited
-until [ $? -eq 1 ]; do
+until [ $? -eq 0 ]; do
   >&2 echo "Container hasn't finished - sleeping"
   sleep 1
   migrateContainerExited
 done
 echo
 
-sleep 10
 echo "Container has finished - logs:"
 docker logs prisma_migrate | sed 's/^/==> /'
 echo
