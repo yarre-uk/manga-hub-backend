@@ -63,7 +63,7 @@ export class AuthController {
     this.setRefreshTokenToCookies(tokens, res);
   }
 
-  @Get('logout')
+  @Post('logout')
   async logout(
     @Cookie(REFRESH_TOKEN) refreshToken: string,
     @Res() res: Response,

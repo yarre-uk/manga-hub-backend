@@ -20,9 +20,9 @@ export class UserController {
 
   @Auth(Role.ADMIN)
   @Serialize()
-  @Get(':idOrEmail')
-  async findOneUser(@Param('idOrEmail') idOrEmail: string) {
-    const user = await this.userService.findOne(idOrEmail);
+  @Get(':id')
+  async findOneUser(@Param('id') id: string) {
+    const user = await this.userService.findOne({ id });
     return new UserResponse(user);
   }
 

@@ -1,25 +1,35 @@
-import { Controller, Delete, Get, Patch } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch } from '@nestjs/common';
+import { User } from '@prisma/client';
 
-import { CurrentUser } from '@/decorators';
+import { CurrentUser, Serialize } from '@/decorators';
 
 import { ProfileService } from './profile.service';
+import { UserResponse } from '../user/user.response';
 
 @Controller('profile')
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
   @Get()
-  me(@CurrentUser('id') userId: string) {
-    return this.profileService.getProfile(userId);
+  @Serialize()
+  async getProfile(@CurrentUser('id') userId: string) {
+    console.log('userId ->', userId);
+    return new UserResponse(await this.profileService.getProfile(userId));
   }
 
   @Patch()
-  update(@CurrentUser('id') userId: string) {
-    return this.profileService.updateProfile(userId);
+  @Serialize()
+  async updateProfile(
+    @CurrentUser('id') userId: string,
+    @Body() newProfileData: Partial<User>,
+  ) {
+    return new UserResponse(
+      await this.profileService.updateProfile(userId, newProfileData),
+    );
   }
 
   @Delete()
-  delete(@CurrentUser('id') userId: string) {
+  deleteProfile(@CurrentUser('id') userId: string) {
     return this.profileService.deleteProfile(userId);
   }
 }

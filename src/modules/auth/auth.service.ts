@@ -27,7 +27,7 @@ export class AuthService {
 
   async register(dto: RegisterDto) {
     const user: User = await this.userService
-      .findOne(dto.email)
+      .findOne({ email: dto.email })
       .catch((err) => {
         this.logger.error(err);
         return null;
@@ -45,7 +45,7 @@ export class AuthService {
 
   async login(dto: LoginDto, agent: string): Promise<Tokens> {
     const user: User = await this.userService
-      .findOne(dto.email)
+      .findOne({ email: dto.email })
       .catch((err) => {
         this.logger.error(err);
         return null;
@@ -59,6 +59,7 @@ export class AuthService {
     }
 
     if (!user || !compareSync(dto.password, user.password)) {
+      console.log(user, dto);
       throw new UnauthorizedException('Wrong login or password');
     }
 
@@ -72,7 +73,7 @@ export class AuthService {
     if (!token || new Date(token.exp) < new Date()) {
       throw new UnauthorizedException();
     }
-    const user = await this.userService.findOne(token.userId);
+    const user = await this.userService.findOne({ id: token.userId });
     return this.generateTokens(user, agent);
   }
 

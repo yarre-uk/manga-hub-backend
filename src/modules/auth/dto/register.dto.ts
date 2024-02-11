@@ -13,6 +13,8 @@ export class RegisterDto {
   @IsNotEmpty()
   email: string;
 
+  nickname: string;
+
   @IsString()
   @MinLength(6)
   @IsNotEmpty()
